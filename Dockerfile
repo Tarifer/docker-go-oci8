@@ -1,4 +1,4 @@
-FROM golang:1.11.3
+FROM golang:1.16.2
 
 RUN apt-get update
 RUN apt-get install -y pkg-config && \
@@ -6,10 +6,11 @@ RUN apt-get install -y pkg-config && \
     apt-get install unzip
 
 ENV CLIENT_FILENAME instantclient_12_1.zip
+ENV LD_LIBRARY_PATH /usr/lib:/usr/local/lib:/usr/instantclient_12_1
+
 COPY /oracle/${CLIENT_FILENAME} .
 COPY /oracle/oci8.pc /usr/lib/pkgconfig/oci8.pc
 
-ENV LD_LIBRARY_PATH /usr/lib:/usr/local/lib:/usr/instantclient_12_1
 
 # to build the application with mattn/go-oci8, it is necessary to extract all files, including the SDK.
 RUN unzip ${CLIENT_FILENAME} -d /usr &&  \
